@@ -1311,6 +1311,10 @@ class FastExportParser(object):
       (author_name, author_email, author_date) = \
         (committer_name, committer_email, committer_date)
 
+    while self._currentline.startswith(b'gpgsig '):
+      self._advance_currentline()
+      self._parse_data()
+
     encoding = None
     if self._currentline.startswith(b'encoding '):
       encoding = self._parse_encoding()
