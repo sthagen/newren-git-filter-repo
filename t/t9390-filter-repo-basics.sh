@@ -380,46 +380,48 @@ test_expect_success 'commit hash unchanged if requested' '
 	)
 '
 
+test_expect_success 'prepare signature tests' '
+	cat >sig_input <<-\EOF
+	feature done
+	commit refs/heads/develop
+	mark :1
+	author Just Me <just@here.org> 1234567890 -0200
+	committer Just Me <just@here.org> 1234567890 -0200
+	data 2
+	A
+
+	commit refs/heads/develop
+	mark :2
+	author Just Me <just@here.org> 1234567890 -0200
+	committer Just Me <just@here.org> 1234567890 -0200
+	gpgsig sha1 openpgp
+	data 21
+	sha1 signature stuff
+	data 2
+	B
+
+	commit refs/heads/develop
+	mark :3
+	author Just Me <just@here.org> 1234567890 -0200
+	committer Just Me <just@here.org> 1234567890 -0200
+	gpgsig sha1 openpgp
+	data 21
+	sha1 signature stuff
+	gpgsig sha256 openpgp
+	data 23
+	sha256 signature stuff
+	data 2
+	C
+	done
+	EOF
+'
+
 test_expect_success 'commit signatures ignored' '
 	(
 		git init commit_signatures &&
 		cd commit_signatures &&
 
-		cat >input <<-\EOF &&
-		feature done
-		commit refs/heads/develop
-		mark :1
-		author Just Me <just@here.org> 1234567890 -0200
-		committer Just Me <just@here.org> 1234567890 -0200
-		data 2
-		A
-
-		commit refs/heads/develop
-		mark :2
-		author Just Me <just@here.org> 1234567890 -0200
-		committer Just Me <just@here.org> 1234567890 -0200
-		gpgsig sha1 openpgp
-		data 21
-		sha1 signature stuff
-		data 2
-		B
-
-		commit refs/heads/develop
-		mark :3
-		author Just Me <just@here.org> 1234567890 -0200
-		committer Just Me <just@here.org> 1234567890 -0200
-		gpgsig sha1 openpgp
-		data 21
-		sha1 signature stuff
-		gpgsig sha256 openpgp
-		data 23
-		sha256 signature stuff
-		data 2
-		C
-		done
-		EOF
-
-		git fast-import --quiet <input &&
+		git fast-import --quiet <../sig_input &&
 
 		git filter-repo --force &&
 		test $(git rev-list --count develop) = 3 &&
