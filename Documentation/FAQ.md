@@ -158,7 +158,7 @@ and you didn't read even the beginning of the manual
 git-filter-repo destructively rewrites history
 ```
 and you think it's okay to run a command with `--force` in it on
-something you don't have a backup of, then now is the time to reasses
+something you don't have a backup of, then now is the time to reassess
 your life choices.  `--force` should be a pretty clear warning sign.
 (If someone on the internet suggested `--force`, you can complain at
 _them_, but either way you should learn to carefully vet commands
